@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Responsive Grid Image Gallery</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+font-family: Arial, sans-serif;
+background: #f4f4f9;
+color: #222;
+font-size: clamp(0.95rem, 1.2vw + 0.6rem, 1.125rem);
+line-height: 1.6;
+}
+.container { max-width: 1200px; margin: auto; padding: 20px; }
+h1 {
+text-align: center;
+font-size: clamp(1.5rem, 4vw + 0.5rem, 2.75rem);
+margin-bottom: 8px;
+}
+.subtitle { text-align: center; margin-bottom: 24px; color: #555; }
+.gallery {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+gap: 16px;
+}
+.gallery figure {
+background: #fff;
+border-radius: 10px;
+overflow: hidden;
+box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+cursor: pointer;
+transition: transform 0.3s;
+}
+.gallery figure:hover { transform: scale(1.03); }
+.gallery img {
+width: 100%;
+aspect-ratio: 4 / 3;
+object-fit: cover;
+display: block;
+}
+.gallery figcaption { padding: 10px; text-align: center; font-size: 0.95em; }
+@media (min-width: 992px) {
+.gallery figure:first-child { grid-column: span 2; grid-row: span 2; }
+.gallery figure:first-child img { height: 100%; }
+}
+@media (max-width: 768px) {
+.gallery { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+.gallery { grid-template-columns: 1fr; }
+}
+#orientation-overlay {
+display: none;
+position: fixed;
+inset: 0;
+z-index: 2000;
+background: rgba(0, 0, 0, 0.9);
+color: #fff;
+text-align: center;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+padding: 20px;
+}
+@media (orientation: landscape) and (max-height: 500px) {
+#orientation-overlay { display: flex; }
+}
+#lightbox {
+display: none;
+position: fixed;
+inset: 0;
+z-index: 1000;
+background: rgba(0, 0, 0, 0.85);
+justify-content: center;
+align-items: center;
+}
+#lightbox.open { display: flex; }
+#lightbox img { max-width: 90%; max-height: 85%; border-radius: 8px; }
+#close-btn {
+position: absolute;
+top: 15px;
+right: 25px;
+font-size: 2.5rem;
+color: #fff;
+background: none;
+border: none;
+cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div id="orientation-overlay" role="alert">
+<h2>Please rotate your device</h2>
+<p>Switch to portrait mode for the best gallery view.</p>
+</div>
+<div class="container">
+<h1>Responsive Image Gallery</h1>
+<p class="subtitle">Built with CSS Grid, auto-fit and media queries</p>
+<section class="gallery" aria-label="Image gallery">
+<figure>
+<img src="https://picsum.photos/id/1015/800/600" alt="River valley between mountains" loading="lazy">
+<figcaption>River Valley</figcaption>
+</figure>
+<figure>
+<img src="https://picsum.photos/id/1016/800/600" alt="Canyon at sunset" loading="lazy">
+<figcaption>Canyon</figcaption>
+</figure>
+<figure>
+<img src="https://picsum.photos/id/1018/800/600" alt="Green mountain landscape" loading="lazy">
+<figcaption>Mountains</figcaption>
+</figure>
+<figure>
+<img src="https://picsum.photos/id/1019/800/600" alt="Rocky coastline" loading="lazy">
+<figcaption>Coastline</figcaption>
+</figure>
+<figure>
+<img src="https://picsum.photos/id/1020/800/600" alt="Brown bear near water" loading="lazy">
+<figcaption>Wildlife</figcaption>
+</figure>
+<figure>
+<img src="https://picsum.photos/id/1021/800/600" alt="Foggy hills at dawn" loading="lazy">
+<figcaption>Foggy Hills</figcaption>
+</figure>
+<figure>
+<img src="https://picsum.photos/id/1022/800/600" alt="Snowy mountain peak" loading="lazy">
+<figcaption>Snow Peak</figcaption>
+</figure>
+<figure>
+<img src="https://picsum.photos/id/1024/800/600" alt="Bird perched on a branch" loading="lazy">
+<figcaption>Bird</figcaption>
+</figure>
+</section>
+</div>
+<div id="lightbox" role="dialog" aria-label="Enlarged image">
+<button id="close-btn" aria-label="Close">&times;</button>
+<img id="lightbox-img" src="" alt="">
+</div>
+<script>
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+document.querySelectorAll('.gallery img').forEach(img => {
+img.addEventListener('click', () => {
+lightboxImg.src = img.src;
+lightboxImg.alt = img.alt;
+lightbox.classList.add('open');
+});
+});
+function closeLightbox() { lightbox.classList.remove('open'); }
+document.getElementById('close-btn').addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', e => {
+if (e.target === lightbox) closeLightbox();
+});
+document.addEventListener('keydown', e => {
+if (e.key === 'Escape') closeLightbox();
+});
+</script>
+</body>
+</html>
